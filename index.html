@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Touch Me</title>
+
+
+    <style>
+
+        /* =========================================
+           БАЗОВІ НАЛАШТУВАННЯ
+           ========================================= */
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+        }
+
+
+        body {
+
+            min-height: 100vh;
+            min-height: 100dvh;
+
+            overflow: hidden;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            font-family: Arial, Helvetica, sans-serif;
+
+            user-select: none;
+            -webkit-user-select: none;
+
+            background:
+
+                radial-gradient(
+                    circle at 15% 20%,
+                    rgba(255, 255, 255, 0.35),
+                    transparent 25%
+                ),
+
+                radial-gradient(
+                    circle at 85% 80%,
+                    rgba(0, 120, 220, 0.25),
+                    transparent 30%
+                ),
+
+                linear-gradient(
+                    135deg,
+                    #dff7ff 0%,
+                    #91daf7 35%,
+                    #45afe2 70%,
+                    #176eae 100%
+                );
+        }
+
+
+        /* =========================================
+           ДЕКОРАТИВНІ КРУГИ
+           ========================================= */
+
+        .bubble {
+
+            position: fixed;
+
+            border-radius: 50%;
+
+            background:
+                rgba(255, 255, 255, 0.12);
+
+            pointer-events: none;
+        }
+
+
+        .bubble1 {
+
+            width: 120px;
+            height: 120px;
+
+            left: 5%;
+            top: 15%;
+        }
+
+
+        .bubble2 {
+
+            width: 180px;
+            height: 180px;
+
+            right: 8%;
+            top: 25%;
+        }
+
+
+        .bubble3 {
+
+            width: 45px;
+            height: 45px;
+
+            left: 45%;
+            top: 20%;
+        }
+
+
+        .bubble4 {
+
+            width: 70px;
+            height: 70px;
+
+            left: 15%;
+            bottom: 15%;
+        }
+
+
+        /* =========================================
+           ПОЧАТКОВИЙ ЕКРАН
+           ========================================= */
+
+        #startScreen {
+
+            position: relative;
+
+            z-index: 5;
+
+            width: 650px;
+
+            max-width: 88%;
+
+            padding: 50px 35px;
+
+            text-align: center;
+
+            border-radius: 35px;
+
+            background:
+                rgba(255, 255, 255, 0.28);
+
+            backdrop-filter:
+                blur(18px);
+
+            -webkit-backdrop-filter:
+                blur(18px);
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.55);
+
+            box-shadow:
+
+                0 25px 70px
+                rgba(0, 60, 110, 0.28),
+
+                inset 0 1px 0
+                rgba(255, 255, 255, 0.55);
+        }
+
+
+        /* =========================================
+           ЗАГОЛОВОК
+           ========================================= */
+
+        h1 {
+
+            color: white;
+
+            font-size:
+                clamp(40px, 8vw, 64px);
+
+            line-height: 1.1;
+
+            margin-bottom: 18px;
+
+            text-shadow:
+                0 5px 18px
+                rgba(0, 55, 100, 0.3);
+        }
+
+
+        /* =========================================
+           ПІДЗАГОЛОВОК
+           ========================================= */
+
+        .subtitle {
+
+            color: white;
+
+            font-size:
+                clamp(17px, 4vw, 22px);
+
+            text-shadow:
+                0 3px 10px
+                rgba(0, 55, 100, 0.25);
+        }
+
+
+        /* =========================================
+           КНОПКА "ТИЦЬ!"
+           ========================================= */
+
+        #runBtn {
+
+            position: fixed;
+
+            z-index: 100;
+
+            border: none;
+
+            padding: 17px 42px;
+
+            border-radius: 22px;
+
+            color: white;
+
+            background:
+
+                linear-gradient(
+                    135deg,
+                    #1ba5f2,
+                    #0877c5,
+                    #075b9d
+                );
+
+            font-size: 25px;
+
+            font-weight: bold;
+
+            letter-spacing: 1px;
+
+            cursor: pointer;
+
+            box-shadow:
+
+                0 14px 35px
+                rgba(0, 60, 120, 0.40),
+
+                inset 0 2px 0
+                rgba(255, 255, 255, 0.35);
+
+            transition:
+
+                left 0.12s ease,
+                top 0.12s ease,
+                transform 0.12s ease;
+
+            touch-action: manipulation;
+
+            -webkit-tap-highlight-color:
+                transparent;
+        }
+
+
+        #runBtn:hover {
+
+            box-shadow:
+
+                0 18px 45px
+                rgba(0, 60, 120, 0.5),
+
+                inset 0 2px 0
+                rgba(255, 255, 255, 0.4);
+        }
+
+
+        #runBtn:active {
+
+            transform:
+                scale(0.94);
+        }
+
+
+        /* =========================================
+           ФІНАЛЬНИЙ ЕКРАН З ФОТО
+           ========================================= */
+
+        #loveCard {
+
+            display: none;
+
+            position: relative;
+
+            z-index: 200;
+
+            max-width: 94vw;
+            max-height: 94vh;
+
+            padding: 12px;
+
+            border-radius: 28px;
+
+            background:
+                rgba(255, 255, 255, 0.22);
+
+            backdrop-filter:
+                blur(15px);
+
+            -webkit-backdrop-filter:
+                blur(15px);
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.45);
+
+            box-shadow:
+
+                0 25px 70px
+                rgba(0, 50, 100, 0.35);
+
+            animation:
+                photoAppear 0.6s ease;
+        }
+
+
+        /* =========================================
+           АНІМАЦІЯ ПОЯВИ ФОТО
+           ========================================= */
+
+        @keyframes photoAppear {
+
+            0% {
+
+                opacity: 0;
+
+                transform:
+                    scale(0.7);
+            }
+
+
+            70% {
+
+                transform:
+                    scale(1.04);
+            }
+
+
+            100% {
+
+                opacity: 1;
+
+                transform:
+                    scale(1);
+            }
+        }
+
+
+        /* =========================================
+           ТВОЄ PNG-ФОТО
+           ========================================= */
+
+        #loveCard img {
+
+            display: block;
+
+            width:
+                min(700px, 88vw);
+
+            max-height: 88vh;
+
+            object-fit: contain;
+
+            border-radius: 20px;
+
+            box-shadow:
+                0 15px 40px
+                rgba(0, 50, 100, 0.25);
+        }
+
+
+        /* =========================================
+           МОБІЛЬНІ ТЕЛЕФОНИ
+           ========================================= */
+
+        @media (max-width: 600px) {
+
+            #startScreen {
+
+                width: 90%;
+
+                padding: 38px 20px;
+
+                border-radius: 28px;
+            }
+
+
+            h1 {
+
+                font-size: 40px;
+            }
+
+
+            .subtitle {
+
+                font-size: 18px;
+            }
+
+
+            #runBtn {
+
+                padding: 15px 30px;
+
+                font-size: 22px;
+
+                border-radius: 20px;
+            }
+
+
+            #loveCard {
+
+                max-width: 94vw;
+
+                max-height: 92vh;
+
+                padding: 7px;
+
+                border-radius: 20px;
+            }
+
+
+            #loveCard img {
+
+                width: 88vw;
+
+                max-height: 86vh;
+
+                border-radius: 14px;
+            }
+
+        }
+
+
+        /* =========================================
+           МАЛЕНЬКІ ТЕЛЕФОНИ
+           ========================================= */
+
+        @media (max-width: 380px) {
+
+            h1 {
+
+                font-size: 34px;
+            }
+
+
+            .subtitle {
+
+                font-size: 16px;
+            }
+
+
+            #runBtn {
+
+                padding: 13px 25px;
+
+                font-size: 20px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================================
+         ДЕКОРАТИВНИЙ ФОН
+         ========================================= -->
+
+    <div class="bubble bubble1"></div>
+
+    <div class="bubble bubble2"></div>
+
+    <div class="bubble bubble3"></div>
+
+    <div class="bubble bubble4"></div>
+
+
+    <!-- =========================================
+         ПОЧАТКОВИЙ ЕКРАН
+         ========================================= -->
+
+    <div id="startScreen">
+
+        <h1>
+            👆 Touch Me
+        </h1>
+
+        <p class="subtitle">
+            спробуй натиснути!
+        </p>
+
+    </div>
+
+
+    <!-- =========================================
+         КНОПКА
+         ========================================= -->
+
+    <button id="runBtn">
+        ТИЦЬ!
+    </button>
+
+
+    <!-- =========================================
+         ФІНАЛЬНЕ ФОТО
+         
+         ТУТ ВИКОРИСТОВУЄТЬСЯ PNG
+
+         Файл:
+         images/photo.png
+         ========================================= -->
+
+    <div id="loveCard">
+
+        <img
+            src="./images/photo.png"
+            alt=""
+        >
+
+    </div>
+
+
+    <script>
+
+        /* =========================================
+           НАЛАШТУВАННЯ ГРИ
+           ========================================= */
+
+        /*
+            Кнопка тікає рівно 5 разів.
+
+            Лічильник користувачу
+            НЕ ПОКАЗУЄТЬСЯ.
+        */
+
+        const MAX_ATTEMPTS = 5;
+
+        let attempts = 0;
+
+
+        /* =========================================
+           ОТРИМУЄМО ЕЛЕМЕНТИ
+           ========================================= */
+
+        const runBtn =
+            document.getElementById(
+                "runBtn"
+            );
+
+
+        const startScreen =
+            document.getElementById(
+                "startScreen"
+            );
+
+
+        const loveCard =
+            document.getElementById(
+                "loveCard"
+            );
+
+
+        /* =========================================
+           ФУНКЦІЯ ВТЕЧІ КНОПКИ
+           ========================================= */
+
+        function moveButton() {
+
+
+            /*
+                Збільшуємо кількість втеч.
+            */
+
+            attempts++;
+
+
+            /* =====================================
+               РОЗМІР КНОПКИ
+               ===================================== */
+
+            const buttonWidth =
+                runBtn.offsetWidth;
+
+
+            const buttonHeight =
+                runBtn.offsetHeight;
+
+
+            /* =====================================
+               ВІДСТУП ВІД КРАЇВ
+               ===================================== */
+
+            const padding = 15;
+
+
+            /* =====================================
+               ДОСТУПНИЙ ПРОСТІР
+               ===================================== */
+
+            const maxX =
+                window.innerWidth -
+                buttonWidth -
+                padding;
+
+
+            const maxY =
+                window.innerHeight -
+                buttonHeight -
+                padding;
+
+
+            /* =====================================
+               ПОВНІСТЮ ВИПАДКОВА ПОЗИЦІЯ
+               ===================================== */
+
+            const randomX =
+                Math.floor(
+                    Math.random() *
+                    Math.max(
+                        maxX - padding,
+                        1
+                    )
+                ) + padding;
+
+
+            const randomY =
+                Math.floor(
+                    Math.random() *
+                    Math.max(
+                        maxY - padding,
+                        1
+                    )
+                ) + padding;
+
+
+            /* =====================================
+               ПЕРЕМІЩУЄМО КНОПКУ
+               ===================================== */
+
+            runBtn.style.left =
+                randomX + "px";
+
+
+            runBtn.style.top =
+                randomY + "px";
+
+
+            runBtn.style.transform =
+                "none";
+
+
+            /* =====================================
+               ПІСЛЯ 5 ВТЕЧ
+               ===================================== */
+
+            if (
+                attempts >=
+                MAX_ATTEMPTS
+            ) {
+
+                setTimeout(
+                    showPhoto,
+                    250
+                );
+
+            }
+
+        }
+
+
+        /* =========================================
+           КОМП'ЮТЕР
+           
+           Коли курсор наближається до кнопки,
+           вона тікає.
+           ========================================= */
+
+        runBtn.addEventListener(
+            "mouseover",
+            function () {
+
+                if (
+                    attempts <
+                    MAX_ATTEMPTS
+                ) {
+
+                    moveButton();
+
+                }
+
+            }
+        );
+
+
+        /* =========================================
+           ТЕЛЕФОН / ПЛАНШЕТ
+           
+           При дотику кнопка тікає.
+           ========================================= */
+
+        runBtn.addEventListener(
+            "touchstart",
+            function (event) {
+
+                event.preventDefault();
+
+
+                if (
+                    attempts <
+                    MAX_ATTEMPTS
+                ) {
+
+                    moveButton();
+
+                }
+
+            },
+            {
+                passive: false
+            }
+        );
+
+
+        /* =========================================
+           КЛІК
+           
+           Якщо кнопку все-таки вдалося натиснути,
+           вона знову тікає.
+           ========================================= */
+
+        runBtn.addEventListener(
+            "click",
+            function (event) {
+
+                event.preventDefault();
+
+
+                if (
+                    attempts <
+                    MAX_ATTEMPTS
+                ) {
+
+                    moveButton();
+
+                }
+
+            }
+        );
+
+
+        /* =========================================
+           ПОКАЗУЄМО ФОТО
+           ========================================= */
+
+        function showPhoto() {
+
+
+            /*
+                Повністю прибираємо
+                початковий екран.
+            */
+
+            startScreen.style.display =
+                "none";
+
+
+            /*
+                Прибираємо кнопку.
+            */
+
+            runBtn.style.display =
+                "none";
+
+
+            /*
+                Показуємо тільки фото.
+            */
+
+            loveCard.style.display =
+                "block";
+
+        }
+
+
+        /* =========================================
+           ПОЧАТКОВА ПОЗИЦІЯ КНОПКИ
+           ========================================= */
+
+        runBtn.style.left =
+            "50%";
+
+
+        runBtn.style.top =
+            "50%";
+
+
+        runBtn.style.transform =
+            "translate(-50%, -50%)";
+
+    </script>
+
+</body>
+
+</html>
